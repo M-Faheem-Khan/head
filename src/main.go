@@ -1,3 +1,9 @@
+/*
+ * Author: Faheem Kha
+ * Date: 22-01-2021
+ * Description: reads n number of bytes/lines from file/Stdin (Golang implementation of head program in linuxs)
+ */
+
 package main
 
 import (
@@ -8,6 +14,11 @@ import (
 	"os"
 )
 
+/*
+ * readBytes: Read n number of bytes from file or Stdin
+ * input (io.Reader): file or Stdin reader
+ * bytesToRead (int): number of bytes to read
+ */
 func readBytes(input io.Reader, bytesToRead int) {
 	buffer := make([]byte, bytesToRead)
 	_, err := io.ReadFull(input, buffer)
@@ -17,6 +28,11 @@ func readBytes(input io.Reader, bytesToRead int) {
 	fmt.Printf("%s\n", buffer)
 }
 
+/*
+ * readLines: Read n number of lines from file or Stdin
+ * input (io.Reader): file or Stdin reader
+ * linesToRead (int): number of lines to read
+ */
 func readLines(input io.Reader, linesToRead int) {
 	buf := bufio.NewScanner(input)
 	for i := 0; i < linesToRead; i++ {
@@ -32,14 +48,16 @@ func readLines(input io.Reader, linesToRead int) {
 }
 
 func main() {
-	// Flag
+	// Creating Variables
+	var input io.Reader
 	var bytesToRead, linesToRead int
+
+	// Settings Flags
 	flag.IntVar(&bytesToRead, "b", 0, "number of bytes to read")
 	flag.IntVar(&linesToRead, "l", 5, "number of lines to read")
 	flag.Parse()
 
 	// Opening File
-	var input io.Reader
 	if fname := flag.Arg(0); fname != "" {
 		f, err := os.Open(fname)
 		if err != nil {
@@ -53,9 +71,13 @@ func main() {
 		input = os.Stdin
 	}
 
-	if bytesToRead == 0 {
+	// Checking which flag was set
+	if bytesToRead != 0 && linesToRead != 5 { // cannot set -b & -l flags together!
+		fmt.Println("Error can't set bytes to read and lines to read flag together!")
+		os.Exit(1)
+	} else if bytesToRead == 0 { // bytes flag was not set - readLines
 		readLines(input, linesToRead)
-	} else {
+	} else { // lines flag was not set - readBytes
 		readBytes(input, bytesToRead)
 	}
 }
