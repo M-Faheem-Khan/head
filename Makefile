@@ -1,6 +1,6 @@
-VERSION := 1.0.0 # Setting Release Version
-PLATFORM := $(shell uname) # Getting Platform (Darwin, Linux)
-MACHINE := $(shell uname -m) # Getting Machine type (x86_64, 386)
+VERSION := 1.0.0# Setting Release Version
+PLATFORM := $(shell uname)# Getting Platform (Darwin, Linux)
+MACHINE := $(shell uname -m)# Getting Machine type (x86_64, 386)
 
 build_darwin:
 	$(info Building for Darwin)
